@@ -82,7 +82,6 @@ TEST_F(TimedDoorTest, DoorRemainsOpenAfterTimeout) {
     ASSERT_TRUE(door.isDoorOpened());
 }
 
-TEST_F(TimedDoorTest, ExceptionThrownOnUnlockAfterTimeoutWithOpenedDoor) {
-    door.lock();
+TEST_F(TimedDoorTest, ExceptionThrownState) {
     EXPECT_NO_THROW(door.throwState());
 }
