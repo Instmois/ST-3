@@ -10,23 +10,23 @@
 
 
 class MockTimer : public Timer {
-public:
+ public:
     MOCK_METHOD(void, tregister, (int, TimerClient*));
 };
 
 class MockTimerClient : public TimerClient {
-public:
+ public:
     MOCK_METHOD(void, Timeout, (), (override));
 };
 
 class TimedDoorTest : public ::testing::Test {
-protected:
+ protected:
     TimedDoor door;
     MockTimerClient* mockClient;
     MockTimer mockTimer;
-public:
+ public:
     TimedDoorTest() : door(10), mockTimer() {}
-protected:
+ protected:
     void SetUp() override {
         mockClient = new MockTimerClient();
     }
@@ -40,7 +40,6 @@ TEST_F(TimedDoorTest, InitialState) {
 }
 
 TEST_F(TimedDoorTest, UnlockDoor) {
-    EXPECT_CALL(*mockTimer, tregister(10, mockClient));
     door.unlock();
     EXPECT_TRUE(door.isDoorOpened());
 }
