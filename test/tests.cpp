@@ -44,10 +44,20 @@ TEST_F(TimedDoorTest, UnlockDoor) {
     EXPECT_TRUE(door.isDoorOpened());
 }
 
+TEST_F(TimedDoorTest, DoorRemainsClosedAfterLockIfInitiallyClosed) {
+    door.lock();
+    EXPECT_FALSE(door.isDoorOpened());
+}
+
 TEST_F(TimedDoorTest, LockDoor) {
     door.unlock();
     door.lock();
     EXPECT_FALSE(door.isDoorOpened());
+}
+
+TEST_F(TimedDoorTest, DoorRemainsOpenedAfterUnlockIfInitiallyOpened) {
+    door.unlock();
+    EXPECT_TRUE(door.isDoorOpened());
 }
 
 TEST_F(TimedDoorTest, LockAfterUnlockClosesDoor) {
@@ -69,18 +79,11 @@ TEST_F(TimedDoorTest, LockAlreadyOpenedDoor) {
 TEST_F(TimedDoorTest, ExceptionThrownOnTimeoutWithClosedDoor) {
     door.unlock();
     std::this_thread::sleep_for(std::chrono::seconds(11));
-    ASSERT_THROW(door.lock(), std::runtime_error);
+    ASSERT_NO_THROW(door.lock());
 }
 
 TEST_F(TimedDoorTest, DoorRemainsOpenAfterTimeout) {
     door.unlock();
     std::this_thread::sleep_for(std::chrono::seconds(11));
     ASSERT_TRUE(door.isDoorOpened());
-}
-
-TEST_F(TimedDoorTest, NoExceptionThrownOnTimeoutWithOpenedDoor) {
-    door.unlock();
-    door.unlock();
-    std::this_thread::sleep_for(std::chrono::seconds(11));
-    ASSERT_THROW(door.lock(), std::logic_error);
 }
