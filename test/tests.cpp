@@ -44,20 +44,15 @@ TEST_F(TimedDoorTest, UnlockDoor) {
     EXPECT_TRUE(door.isDoorOpened());
 }
 
-TEST_F(TimedDoorTest, DoorRemainsClosedAfterLockIfInitiallyClosed) {
-    door.lock();
-    EXPECT_FALSE(door.isDoorOpened());
+TEST_F(TimedDoorTest, NoChangeOnLockIfAlreadyClosed) {
+    door.lock(); 
+    EXPECT_FALSE(door.isDoorOpened()); 
 }
 
 TEST_F(TimedDoorTest, LockDoor) {
     door.unlock();
     door.lock();
     EXPECT_FALSE(door.isDoorOpened());
-}
-
-TEST_F(TimedDoorTest, DoorRemainsOpenedAfterUnlockIfInitiallyOpened) {
-    door.unlock();
-    EXPECT_TRUE(door.isDoorOpened());
 }
 
 TEST_F(TimedDoorTest, LockAfterUnlockClosesDoor) {
