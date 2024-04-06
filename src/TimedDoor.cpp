@@ -22,8 +22,10 @@ bool TimedDoor::isDoorOpened() {
 }
 
 void TimedDoor::unlock() {
+    if (isOpened) {
+        throw std::logic_error("Door is already unlocked");
+    }
     isOpened = true;
-    adapter->Timeout();
 }
 
 void TimedDoor::lock() {
