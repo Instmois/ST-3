@@ -44,9 +44,8 @@ TEST_F(TimedDoorTest, UnlockDoor) {
     EXPECT_TRUE(door.isDoorOpened());
 }
 
-TEST_F(TimedDoorTest, NoChangeOnLockIfAlreadyClosed) {
-    door.lock(); 
-    EXPECT_FALSE(door.isDoorOpened()); 
+TEST_F(TimedDoorTest, ExceptionThrownOnUnlockIfAlreadyClosed) {
+    ASSERT_THROW(door.unlock(), std::logic_error);
 }
 
 TEST_F(TimedDoorTest, LockDoor) {
