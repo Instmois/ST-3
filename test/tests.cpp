@@ -82,5 +82,5 @@ TEST_F(TimedDoorTest, NoExceptionThrownOnTimeoutWithOpenedDoor) {
     door.unlock();
     door.unlock();
     std::this_thread::sleep_for(std::chrono::seconds(11));
-    ASSERT_NO_THROW(door.lock());
+    ASSERT_THROW(door.lock(), std::logic_error);
 }

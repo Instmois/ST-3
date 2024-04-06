@@ -29,6 +29,8 @@ void TimedDoor::unlock() {
 }
 
 void TimedDoor::lock() {
+    if (!isOpened)
+        throw std::logic_error("Door is already closed");
     isOpened = false;
 }
 
