@@ -1,8 +1,8 @@
-// Copyright 2024 
+// Copyright 2024 Moiseev Nikita
 
 #include "TimedDoor.h"
-#include <thread>
-#include <chrono>
+#include <thread> // NOLINT [build/c++11]
+#include <chrono> // NOLINT [build/c++11]
 #include <stdexcept>
 
 DoorTimerAdapter::DoorTimerAdapter(TimedDoor& door) : door(door) {}
@@ -13,7 +13,8 @@ void DoorTimerAdapter::Timeout() {
     }
 }
 
-TimedDoor::TimedDoor(int timeout) : adapter(new DoorTimerAdapter(*this)), iTimeout(timeout), isOpened(false) {}
+TimedDoor::TimedDoor(int timeout) : adapter(new DoorTimerAdapter(*this)),
+    iTimeout(timeout), isOpened(false) {}
 
 bool TimedDoor::isDoorOpened() {
     return isOpened;

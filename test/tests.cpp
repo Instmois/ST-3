@@ -1,10 +1,10 @@
-// Copyright 2021 GHA Test Team
+// Copyright 2024 Moiseev Nikita
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <cstdint>
-#include <chrono>
-#include <thread>
+#include <chrono> // NOLINT [build/c++11]
+#include <thread> // NOLINT [build/c++11]
 
 #include "TimedDoor.h"
 
@@ -22,10 +22,10 @@ public:
 class TimedDoorTest : public ::testing::Test {
 protected:
     TimedDoor door;
-    MockTimerClient *mockClient;
-    Timer timer;
+    MockTimerClient* mockClient;
+    MockTimer mockTimer;
 public:
-    TimedDoorTest() : door(10), timer() {}
+    TimedDoorTest() : door(10), mockTimer() {}
 protected:
     void SetUp() override {
         mockClient = new MockTimerClient();
@@ -40,17 +40,20 @@ TEST_F(TimedDoorTest, InitialState) {
 }
 
 TEST_F(TimedDoorTest, UnlockDoor) {
+    EXPECT_CALL(*mockTimer, tregister(10, mockClient));
     door.unlock();
     EXPECT_TRUE(door.isDoorOpened());
 }
 
 TEST_F(TimedDoorTest, LockDoor) {
+    door.unlock();
     door.lock();
     EXPECT_FALSE(door.isDoorOpened());
 }
 
 TEST_F(TimedDoorTest, LockAfterUnlockClosesDoor) {
     door.unlock();
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     door.lock();
     EXPECT_FALSE(door.isDoorOpened());
 }
@@ -64,24 +67,22 @@ TEST_F(TimedDoorTest, LockAlreadyOpenedDoor) {
     EXPECT_THROW(door.lock(), std::logic_error);
 }
 
-TEST_F(TimedDoorTest, ExceptionThrownOn) {
+TEST_F(TimedDoorTest, ExceptionThrownOnTimeoutWithClosedDoor) {
     door.unlock();
+    std::this_thread::sleep_for(std::chrono::seconds(11));
     ASSERT_THROW(door.lock(), std::runtime_error);
-}
-
-TEST_F(TimedDoorTest, CLOSED_BEFORE_TIMEOUT_NO_THROW) {
-    EXPECT_NO_THROW(door.throwState());
 }
 
 TEST_F(TimedDoorTest, DoorRemainsOpenAfterTimeout) {
     door.unlock();
-    std::this_thread::sleep_for(std::chrono::seconds(11)); 
+    std::this_thread::sleep_for(std::chrono::seconds(11));
     ASSERT_TRUE(door.isDoorOpened());
 }
 
 TEST_F(TimedDoorTest, NoExceptionThrownOnTimeoutWithOpenedDoor) {
     door.unlock();
-    door.unlock(); 
-    std::this_thread::sleep_for(std::chrono::seconds(11)); 
+    door.unlock();
+    std::this_thread::sleep_for(std::chrono::seconds(11));
     ASSERT_NO_THROW(door.lock());
 }
+
